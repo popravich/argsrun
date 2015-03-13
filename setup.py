@@ -27,10 +27,10 @@ setup(name="ArgsRun",
       install_requires=install_requires,
       entry_points={
         'console_scripts': [
-            'argsrun = argsrun.main:main',
+            'argsrun = argsrun:main',
             ],
         'argsrun': [
-            'version = argsrun.main:version',
+            'echo = argsrun:echo',
             ],
         },
       )
