@@ -18,7 +18,7 @@ def read_version():
 
 install_requires = []
 
-setup(name="ArgsRun",
+setup(name="Argsrun",
       version=read_version(),
       description="Simple library for creating commands & subcommands",
       platforms=["POSIX"],   # XXX
@@ -30,6 +30,7 @@ setup(name="ArgsRun",
             'argsrun = argsrun:main',
             ],
         'argsrun': [
+            'discover = argsrun.discover:discover',
             'echo = argsrun:echo',
             ],
         },

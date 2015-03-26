@@ -35,6 +35,8 @@ def main():
 
     prepare_func, p = _build_sub_parser(opts.entry_point, sub)
     handler = prepare_func(p)
+    assert callable(handler), (
+        "{!s} entry must return callable object".format(entry))
     options = ap.parse_args(args)
     return handler(options)
 
