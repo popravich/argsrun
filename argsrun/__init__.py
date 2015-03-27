@@ -38,7 +38,12 @@ def main():
     assert callable(handler), (
         "{!s} entry must return callable object".format(entry))
     options = ap.parse_args(args)
-    return handler(options)
+    try:
+        return handler(options)
+    except InvalidArguments as exc:
+        print(exc)
+        ap.print_help()
+        return -1
 
 
 def _build_sub_parser(entry, sub_parser):
@@ -51,6 +56,14 @@ def _build_sub_parser(entry, sub_parser):
     sub = sub_parser.add_parser(entry.name, description=docstr,
                                 help=short_help)
     return prepare_func, sub
+
+
+class InvalidArguments(Exception):
+    """Exception to be raised in case of any option is invalid.
+
+    First argument should be a text message.
+    Help will be printed with that message.
+    """
 
 
 def echo(ap):
