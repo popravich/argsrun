@@ -1,0 +1,4 @@
+include LICENSE
+include README.rst
+graft argsrun
+global-exclude *.pyc *.swp

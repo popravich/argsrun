@@ -16,22 +16,47 @@ def read_version():
             raise RuntimeError('Cannot find version in argsrun/__init__.py')
 
 
+def read(*parts):
+    with open(os.path.join(*parts), 'rt') as f:
+        return f.read().strip()
+
+
 install_requires = []
 
-setup(name="Argsrun",
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    'Environment :: Console',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: POSIX',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.3',
+    'Programming Language :: Python :: 3.4',
+    'Topic :: Software Development',
+    'Topic :: Software Development :: Libraries',
+    'Topic :: Utilities',
+]
+
+setup(name="argsrun",
       version=read_version(),
-      description="Simple library for creating commands & subcommands",
+      description="Simple tool for creating commands & sub-commands",
+      long_description="\n\n".join((read('README.rst'),)),
+      classifiers=classifiers,
       platforms=["POSIX"],   # XXX
+      author="Alexey Popravka",
+      author_email="alexey.popravka@horsedevel.com",
       packages=find_packages(),
       include_package_data=True,
       install_requires=install_requires,
+      url="https://github.com/popravich/argsrun",
+      license="MIT",
       entry_points={
         'console_scripts': [
             'argsrun = argsrun:main',
             ],
         'argsrun': [
             'discover = argsrun.discover:discover',
-            'echo = argsrun:echo',
             ],
         },
       )

@@ -15,9 +15,9 @@ Usage example:
           # ...
           entry_points={
             'console_scripts': [
-                'myproj = argsrun:main',
+                'myproj = argsrun:main',  # argsrun will handle main command
             ],
-            'myproj': [
+            'myproj': [                   # ...and lookup for this subcommands
                 'main = myproj:main',
                 'run = myproj.module:run',
             ],
@@ -28,7 +28,7 @@ entry point, you can easily do it like follows:
 
 .. code:: python
 
-    # my-site/frontend/setup.py
+    # my-frontend-app/setup.py
 
     setup(name="MySite Frontend",
           entry_points={
@@ -36,11 +36,11 @@ entry point, you can easily do it like follows:
                 'mysite = argsrun:main',
             ],
             'mysite': [
-                'server-frontend = frontend:serve',
+                'serve-frontend = frontend:serve',
             ]
           })
 
-    # my-site/backend/setup.py
+    # my-backend-app/setup.py
 
     setup(name="MySite Admin backend",
           entry_points={
@@ -48,6 +48,19 @@ entry point, you can easily do it like follows:
                 'mysite = argsrun:main',
             ],
             'mysite': [
-                'server-admin = backend:serve',
+                'serve-admin = backend:serve',
             ]
           })
+
+     # In my-frontend-app/frontend/__init__.py
+
+     import argsrun
+
+     def handler(options):
+         # Run frontend app
+         pass
+
+     def parser_setup(ap):
+         ap.add_argument('--port', help="Port to bind to")
+
+     main = argsrun.Entry(handler, parser_setup)
