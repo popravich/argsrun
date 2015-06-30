@@ -8,7 +8,26 @@ __version__ = '0.0.2'
 
 
 class Entry:
-    """Creates argsrun entry"""
+    """Creates argsrun entry.
+
+    Entry holds command handler and optionally:
+    * argparser_setup callable -- to configure sub-parser
+    * short_help and description messages for parent parser.
+
+    if no short_help or description are passed they will be extracted
+    from handler's docstring (if any, ofcourse).
+
+    The argsrun.Entry instances are callable objects so the following
+    use-case is possible:
+
+    >>> def handler(opts):
+    ...     print(opts)
+    >>> def setup(ap):
+    ...     pass
+    >>> main = argsrun.Entry(handler, setup)
+    >>> if __name__ == '__main__':
+    ...     main()
+    """
 
     __slots__ = ('handler', 'argparser_setup',
                  'short_help', 'description')
@@ -27,6 +46,9 @@ class Entry:
             short = None
         self.short_help = short_help or short
         self.description = description or docstr
+
+    def __call__(self):
+        return runme(self)
 
 
 def main():
@@ -91,6 +113,7 @@ def runme(handler):
         return -1
 
 
+# TODO: replace with argparse.ArgumentError
 class InvalidArguments(Exception):
     """Exception to be raised in case of any option is invalid.
 
