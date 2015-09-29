@@ -1,8 +1,15 @@
+import sys
 import unittest
 import argparse
-from unittest import mock
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 from argsrun import Entry
+
+
+PY_35 = sys.version_info >= (3, 5)
 
 
 class TestEntry(unittest.TestCase):
@@ -31,8 +38,11 @@ class TestEntry(unittest.TestCase):
 
         entry(['script'])
 
-        with self.assertRaisesRegex(ValueError,
-                                    "need more than 0 values to unpack"):
+        if PY_35:
+            msg = "not enough values to unpack"
+        else:
+            msg = "need more than 0 values to unpack"
+        with self.assertRaisesRegex(ValueError, msg):
             entry([])
 
     def test_argparse_setup(self):
