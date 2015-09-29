@@ -7,9 +7,15 @@ python:
 - "3.4"
 - "3.5"
 
+cache:
+  directories:
+  - $HOME/.cache/pip
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
+
 install:
-- pip install -e .
 - pip install coverage pep8 pyflakes mock
+- python setup.py develop
 
 script:
 - pyflakes argsrun tests
