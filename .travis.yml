@@ -1,0 +1,19 @@
+sudo: false
+
+language: python
+python:
+- "2.7"
+- "3.2"
+- "3.3"
+- "3.4"
+- "3.5"
+
+install:
+- pip install -e .
+- pip install coverage pep8 pyflakes
+
+script:
+- pyflakes argsrun tests
+- pep8 argsrun tests
+- coverage run --source=argsrun -m unittest discover -v tests
+- coverage report
