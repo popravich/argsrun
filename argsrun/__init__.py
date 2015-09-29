@@ -34,12 +34,17 @@ class Entry:
 
     def __init__(self, handler, argparser_setup=None, *,
                  short_help=None, description=None):
-        assert callable(handler)
-        assert argparser_setup is None or callable(argparser_setup)
+        assert callable(handler), handler
+        assert argparser_setup is None or callable(argparser_setup), \
+            argparser_setup
+        assert short_help is None or isinstance(short_help, str), short_help
+        assert description is None or isinstance(description, str), \
+            description
         self.handler = handler
         self.argparser_setup = argparser_setup
         docstr = getattr(handler, '__doc__', None)
         if docstr:
+            # TODO: filter docstring (drop whitespaces)
             short = [l.strip() for l in docstr.splitlines() if l.strip()]
             short = short and short[0] or None
         else:
@@ -47,12 +52,14 @@ class Entry:
         self.short_help = short_help or short
         self.description = description or docstr
 
-    def __call__(self):
-        return runme(self)
+    def __call__(self, argv=None):
+        return runme(self, argv)
 
 
-def main():
-    script, *args = sys.argv
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+    script, *args = argv
     script = os.path.basename(script)
 
     # XXX: this is not very convenient way
@@ -98,14 +105,17 @@ def main():
         return -1
 
 
-def runme(handler):
+def runme(handler, argv=None):
     """Runs standalone argsrun Entry."""
-    assert isinstance(handler, Entry)
+    assert isinstance(handler, Entry), handler
+    if argv is None:
+        argv = sys.argv
+    script, *args = argv
     ap = argparse.ArgumentParser(description=handler.description)
     if handler.argparser_setup:
         handler.argparser_setup(ap)
     try:
-        options = ap.parse_args(sys.argv[1:])
+        options = ap.parse_args(args)
         return handler.handler(options)
     except InvalidArguments as exc:
         print(exc)
