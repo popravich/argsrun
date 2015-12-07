@@ -21,7 +21,9 @@ def read(*parts):
         return f.read().strip()
 
 
-install_requires = []
+install_requires = [
+    'setuptools>=18.7.1',
+    ]
 
 classifiers = [
     'Development Status :: 3 - Alpha',
